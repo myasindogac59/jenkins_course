@@ -4,12 +4,16 @@ pipeline {
     stages{
         stage('Build') {
             steps {
-                echo 'Building the projects...'
+                echo 'Checking Files...'
+                sh 'ls -la'
             }
         }
         stage('Test') {
             steps {
-                echo 'Running tests...'
+                echo 'Testing if index.html exists...'
+                // index.html dosyası var mı diye kontrol et, yoksa hata ver
+                sh 'test -f index.html'
+                echo 'Yes, index.html is here'
             }
         }
         stage('Deploy') {
