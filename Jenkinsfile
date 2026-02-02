@@ -1,55 +1,21 @@
 pipeline {
     agent any
-    
-    options {
-        // unit: 'HOURS' büyük harf ve virgül eklendi
-        timeout(time: 1, unit: 'HOURS') 
-        timestamps() 
-        disableConcurrentBuilds() 
-    }
-    
-    stages {
-        stage('Checkout') {
+
+    stages{
+        stage('Build') {
             steps {
-                echo 'Cloning repository from Source Control...'
-                checkout scm
+                echo 'Building the projects...'
             }
         }
-        
-        stage('Build & Test') {
+        stage('Test') {
             steps {
-                echo "Running tests on branch: ${BRANCH_NAME}"
-                // sh komutu içindeki tırnaklara ve parantezlere dikkat
-                sh "echo 'Compiling the application and running unit tests...'"
+                echo 'Running tests...'
             }
         }
-        
-        stage('Deploy to Staging') {
-            when {
-                expression { env.GIT_BRANCH == 'origin/develop' || env.GIT_BRANCH == 'develop' }
-            }
+        stage('Deploy') {
             steps {
-                echo ' Deploying to Staging Environment...'
+                echo 'Deploying application'
             }
-        }
-        
-        stage('Deploy to Production') {
-            when {
-                branch 'main'
-            }
-            steps {
-                echo ' Deploying to Production Environment...'
-                sh 'echo "Deployment to PROD successful"'
-            }
-        }
-    }
-    
-    post {
-        success {
-            echo ' Pipeline completed successfully!'
-        }
-        failure {
-            echo ' Pipeline failed. Checking logs...'
         }
     }
 }
